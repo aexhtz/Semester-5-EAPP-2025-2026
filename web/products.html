@@ -69,15 +69,16 @@
 
     <script>
         const products = [
-            { id: 1, name: 'GCash', icon: '💙', color: 'from-blue-400 to-blue-600' },
-            { id: 2, name: 'PayMaya', icon: '💳', color: 'from-red-400 to-red-600' },
-            { id: 3, name: 'OVO', icon: '🟣', color: 'from-purple-400 to-purple-600' },
-            { id: 4, name: 'DANA', icon: '🔵', color: 'from-cyan-400 to-cyan-600' },
-            { id: 5, name: 'GoPay', icon: '🟢', color: 'from-green-400 to-green-600' },
-            { id: 6, name: 'LinkAja', icon: '📱', color: 'from-orange-400 to-orange-600' },
-            { id: 7, name: 'ShopeePay', icon: '🛍️', color: 'from-red-500 to-orange-500' },
-            { id: 8, name: 'QRIS', icon: '📲', color: 'from-slate-400 to-slate-600' }
-        ];
+    { id: 1, name: 'GCash',      icon: 'icon/GCash.jpg',      color: 'from-blue-400 to-blue-600' },
+    { id: 2, name: 'PayMaya',    icon: 'icon/paymaya.png',    color: 'from-red-400 to-red-600' },
+    { id: 3, name: 'OVO',        icon: 'icon/ovo.jpg',        color: 'from-purple-400 to-purple-600' },
+    { id: 4, name: 'DANA',       icon: 'icon/Dana.jpg',       color: 'from-cyan-400 to-cyan-600' },
+    { id: 5, name: 'GoPay',      icon: 'icon/gopay.png',      color: 'from-green-400 to-green-600' },
+    { id: 6, name: 'LinkAja',    icon: 'icon/linkaja.png',    color: 'from-orange-400 to-orange-600' },
+    { id: 7, name: 'ShopeePay',  icon: 'icon/shopeepay.png',  color: 'from-red-500 to-orange-500' },
+    { id: 8, name: 'QRIS',       icon: 'icon/qris.png',       color: 'from-slate-400 to-slate-600' }
+];
+
 
         let selectedProduct = null;
 
@@ -85,7 +86,10 @@
             const grid = document.getElementById('productsGrid');
             grid.innerHTML = products.map(product => `
                 <div onclick="openModal(${product.id})" class="bg-white rounded-xl p-6 shadow-sm hover:shadow-lg transition cursor-pointer">
-                    <div class="text-5xl mb-4">${product.icon}</div>
+                    <div class="mb-4">
+                        <img src="${product.icon}" alt="${product.name}" class="w-14 h-14 object-contain">
+                        </div>
+
                     <h3 class="font-semibold text-lg">${product.name}</h3>
                     <p class="text-slate-500 text-sm mt-1">Top-up sekarang</p>
                 </div>
