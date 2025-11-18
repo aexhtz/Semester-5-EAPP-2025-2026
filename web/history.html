@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Riwayat Transaksi - SmartPay</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap');
+        * { font-family: 'Plus Jakarta Sans', sans-serif; }
+    </style>
+</head>
+<body class="bg-slate-50">
+    <!-- Navbar -->
+    <nav class="sticky top-0 z-50 bg-white shadow-sm">
+        <div class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+            <div class="flex items-center gap-2">
+                <div class="w-8 h-8 bg-gradient-to-br from-blue-600 to-blue-700 rounded-lg flex items-center justify-center">
+                    <span class="text-white font-bold">SP</span>
+                </div>
+                <span class="text-lg font-bold text-slate-900">SmartPay</span>
+            </div>
+            <div class="flex items-center gap-6">
+                <a href="dashboard.html" class="text-slate-600 hover:text-slate-900 transition">Dashboard</a>
+                <a href="products.html" class="text-slate-600 hover:text-slate-900 transition">Top-Up</a>
+                <button onclick="logout()" class="text-slate-600 hover:text-slate-900 transition">Logout</button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="max-w-7xl mx-auto px-6 py-8">
+        <div class="flex items-center justify-between mb-8">
+            <h1 class="text-3xl font-bold">Riwayat Transaksi</h1>
+            <select id="filterStatus" class="px-4 py-2 border-2 border-slate-200 rounded-lg focus:border-blue-500 outline-none">
+                <option value="">Semua Status</option>
+                <option value="success">Berhasil</option>
+                <option value="pending">Pending</option>
+                <option value="failed">Gagal</option>
+            </select>
+        </div>
+
+        <!-- Transactions Table -->
+        <div class="bg-white rounded-xl shadow-sm overflow-hidden">
+            <table class="w-full">
+                <thead class="bg-slate-50 border-b border-slate-200">
+                    <tr>
+                        <th class="px-6 py-4 text-left text-sm font-semibold text-slate-700">E-Wallet</th>
+                        <th class="px-6 py-4 text-left text-sm font-semibold text-slate-700">Nomor Tujuan</th>
+                        <th class="px-6 py-4 text-left text-sm font-semibold text-slate-700">Nominal</th>
+                        <th class="px-6 py-4 text-left text-sm font-semibold text-slate-700">Tanggal</th>
+                        <th class="px-6 py-4 text-left text-sm font-semibold text-slate-700">Status</th>
+                    </tr>
+                </thead>
+                <tbody id="transactionTable">
+                    <!-- Transactions akan di-generate oleh JavaScript -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        const transactions = [
+            { id: 1, wallet: 'GCash', number: '08123456789', amount: 100000, date: '2024-01-15', status: 'success' },
+            { id: 2, wallet: 'OVO', number: '08987654321', amount: 50000, date: '2024-01-14', status: 'success' },
+            { id: 3, wallet: 'DANA', number: '08111111111', amount: 200000, date: '2024-01-13', status: 'pending' },
+            { id: 4, wallet: 'GoPay', number: '08222222222', amount: 150000, date: '2024-01-12', status: 'success' },
+            { id: 5, wallet: 'PayMaya', number: '08333333333', amount: 250000, date: '2024-01-11', status: 'failed' },
+            { id: 6, wallet: 'ShopeePay', number: '08444444444', amount: 75000, date: '2024-01-10', status: 'success' },
+        ];
+
+        function renderTransactions(filter = '') {
+            const table = document.getElementById('transactionTable');
+            let filtered = transactions;
+            
+            if (filter) {
+                filtered = transactions.filter(t => t.status === filter);
+            }
+
+            table.innerHTML = filtered.map(t => {
+                const statusColors = {
+                    success: 'bg-green-100 text-green-800',
+                    pending: 'bg-yellow-100 text-yellow-800',
+                    failed: 'bg-red-100 text-red-800'
+                };
+                const statusText = {
+                    success: 'Berhasil',
+                    pending: 'Pending',
+                    failed: 'Gagal'
+                };
+
+                return `
+                    <tr class="border-b border-slate-200 hover:bg-slate-50 transition">
+                        <td class="px-6 py-4 font-medium text-slate-900">${t.wallet}</td>
+                        <td class="px-6 py-4 text-slate-600">${t.number}</td>
+                        <td class="px-6 py-4 font-semibold text-slate-900">Rp ${t.amount.toLocaleString('id-ID')}</td>
+                        <td class="px-6 py-4 text-slate-600">${t.date}</td>
+                        <td class="px-6 py-4">
+                            <span class="px-3 py-1 rounded-full text-sm font-medium ${statusColors[t.status]}">
+                                ${statusText[t.status]}
+                            </span>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+
+            if (filtered.length === 0) {
+                table.innerHTML = '<tr><td colspan="5" class="px-6 py-8 text-center text-slate-500">Tidak ada transaksi</td></tr>';
+            }
+        }
+
+        document.getElementById('filterStatus').addEventListener('change', function(e) {
+            renderTransactions(e.target.value);
+        });
+
+        function logout() {
+            alert('Logout berhasil!');
+            window.location.href = 'index.html';
+        }
+
+        renderTransactions();
+    </script>
+</body>
+</html>

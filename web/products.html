@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Top-Up E-Wallet - SmartPay</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap');
+        * { font-family: 'Plus Jakarta Sans', sans-serif; }
+    </style>
+</head>
+<body class="bg-slate-50">
+    <!-- Navbar -->
+    <nav class="sticky top-0 z-50 bg-white shadow-sm">
+        <div class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+            <div class="flex items-center gap-2">
+                <div class="w-8 h-8 bg-gradient-to-br from-blue-600 to-blue-700 rounded-lg flex items-center justify-center">
+                    <span class="text-white font-bold">SP</span>
+                </div>
+                <span class="text-lg font-bold text-slate-900">SmartPay</span>
+            </div>
+            <div class="flex items-center gap-6">
+                <a href="dashboard.html" class="text-slate-600 hover:text-slate-900 transition">Dashboard</a>
+                <a href="history.html" class="text-slate-600 hover:text-slate-900 transition">Riwayat</a>
+                <button onclick="logout()" class="text-slate-600 hover:text-slate-900 transition">Logout</button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="max-w-7xl mx-auto px-6 py-8">
+        <h1 class="text-3xl font-bold mb-8">Pilih E-Wallet</h1>
+
+        <!-- Products Grid -->
+        <div class="grid grid-cols-4 gap-6" id="productsGrid">
+            <!-- Products akan di-generate oleh JavaScript -->
+        </div>
+    </div>
+
+    <!-- Modal -->
+    <div id="modal" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center">
+        <div class="bg-white rounded-2xl p-8 w-full max-w-md">
+            <div class="flex items-center justify-between mb-6">
+                <h2 id="modalTitle" class="text-2xl font-bold"></h2>
+                <button onclick="closeModal()" class="text-slate-400 hover:text-slate-600 text-2xl">&times;</button>
+            </div>
+
+            <form id="topupForm">
+                <div class="mb-5">
+                    <label class="block text-sm font-semibold text-slate-700 mb-2">Nomor Akun</label>
+                    <input type="text" required id="accountNumber" class="w-full px-4 py-3 rounded-lg border-2 border-slate-200 focus:border-blue-500 outline-none transition" placeholder="08123456789">
+                </div>
+
+                <div class="mb-6">
+                    <label class="block text-sm font-semibold text-slate-700 mb-2">Nominal</label>
+                    <div class="grid grid-cols-3 gap-2 mb-3">
+                        <button type="button" class="py-2 px-3 border-2 border-slate-200 rounded-lg hover:border-blue-500 transition font-medium" onclick="setAmount(50000)">Rp 50K</button>
+                        <button type="button" class="py-2 px-3 border-2 border-slate-200 rounded-lg hover:border-blue-500 transition font-medium" onclick="setAmount(100000)">Rp 100K</button>
+                        <button type="button" class="py-2 px-3 border-2 border-slate-200 rounded-lg hover:border-blue-500 transition font-medium" onclick="setAmount(200000)">Rp 200K</button>
+                    </div>
+                    <input type="number" required id="amount" class="w-full px-4 py-3 rounded-lg border-2 border-slate-200 focus:border-blue-500 outline-none transition" placeholder="Masukkan nominal">
+                </div>
+
+                <button type="submit" class="w-full bg-blue-600 text-white py-3 rounded-lg font-semibold hover:bg-blue-700 transition">Proses Top-Up</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        const products = [
+            { id: 1, name: 'GCash', icon: '💙', color: 'from-blue-400 to-blue-600' },
+            { id: 2, name: 'PayMaya', icon: '💳', color: 'from-red-400 to-red-600' },
+            { id: 3, name: 'OVO', icon: '🟣', color: 'from-purple-400 to-purple-600' },
+            { id: 4, name: 'DANA', icon: '🔵', color: 'from-cyan-400 to-cyan-600' },
+            { id: 5, name: 'GoPay', icon: '🟢', color: 'from-green-400 to-green-600' },
+            { id: 6, name: 'LinkAja', icon: '📱', color: 'from-orange-400 to-orange-600' },
+            { id: 7, name: 'ShopeePay', icon: '🛍️', color: 'from-red-500 to-orange-500' },
+            { id: 8, name: 'QRIS', icon: '📲', color: 'from-slate-400 to-slate-600' }
+        ];
+
+        let selectedProduct = null;
+
+        function renderProducts() {
+            const grid = document.getElementById('productsGrid');
+            grid.innerHTML = products.map(product => `
+                <div onclick="openModal(${product.id})" class="bg-white rounded-xl p-6 shadow-sm hover:shadow-lg transition cursor-pointer">
+                    <div class="text-5xl mb-4">${product.icon}</div>
+                    <h3 class="font-semibold text-lg">${product.name}</h3>
+                    <p class="text-slate-500 text-sm mt-1">Top-up sekarang</p>
+                </div>
+            `).join('');
+        }
+
+        function openModal(productId) {
+            selectedProduct = products.find(p => p.id === productId);
+            document.getElementById('modalTitle').textContent = selectedProduct.name;
+            document.getElementById('modal').classList.remove('hidden');
+            document.getElementById('accountNumber').focus();
+        }
+
+        function closeModal() {
+            document.getElementById('modal').classList.add('hidden');
+            document.getElementById('topupForm').reset();
+        }
+
+        function setAmount(amount) {
+            document.getElementById('amount').value = amount;
+        }
+
+        document.getElementById('topupForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const amount = document.getElementById('amount').value;
+            const account = document.getElementById('accountNumber').value;
+            alert(`Top-up ${selectedProduct.name} sebesar Rp ${parseInt(amount).toLocaleString('id-ID')} ke ${account} berhasil!`);
+            closeModal();
+            window.location.href = 'history.html';
+        });
+
+        renderProducts();
+    </script>
+</body>
+</html>
