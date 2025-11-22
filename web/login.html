@@ -69,8 +69,6 @@
             let result = await eel.login_user(email, password)();
 
             if (result.status === "success") {
-
-                // Simpan session ke localStorage
                 localStorage.setItem("fullname", result.fullname);
                 localStorage.setItem("email", result.email);
 
@@ -92,6 +90,13 @@
                 });
             }
         });
+
+        window.onload = function() {
+            let fullname = localStorage.getItem("fullname");
+            if (fullname) {
+                window.location.href = "dashboard.html";
+            }
+        };
     </script>
 
 
